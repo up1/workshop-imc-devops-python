@@ -75,20 +75,24 @@ def test_create_employee_with_invalid_body_returns_400(repository, request_body)
     repository.create.assert_not_called()
 
 
-def test_create_employee_when_repository_fails_returns_500(repository):
+def test_create_employee_when_repository_fails_returns_500(repository, caplog):
     repository.create.side_effect = RuntimeError("database unavailable")
 
-    response = client.post(
-        "/api/employees",
-        json={
-            "name": "John Doe",
-            "email": "john.doe@example.com",
-            "position": "Software Engineer",
-        },
-    )
+    with caplog.at_level("ERROR", logger="api.main"):
+        response = client.post(
+            "/api/employees",
+            json={
+                "name": "John Doe",
+                "email": "john.doe@example.com",
+                "position": "Software Engineer",
+            },
+        )
 
     assert response.status_code == 500
     assert response.json() == {"error": "Internal server error"}
+    assert any(
+        "Unhandled exception" in record.message for record in caplog.records
+    )
 
 
 def test_create_employee_with_duplicate_email_returns_400(repository):

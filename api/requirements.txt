@@ -2,3 +2,5 @@ pydantic
 fastapi[standard]
 mysql-connector-python
 pytest
+opentelemetry-distro
+opentelemetry-exporter-otlp
