@@ -1,3 +1,4 @@
+import logging
 from typing import Annotated
 
 from fastapi import APIRouter, Depends
@@ -11,6 +12,8 @@ from api.repositories.employee_repository import (
     MySQLEmployeeRepository,
 )
 from api.services.employee_service import EmployeeService
+
+logger = logging.getLogger(__name__)
 
 router = APIRouter(prefix="/api/employees", tags=["employees"])
 
@@ -30,9 +33,11 @@ def create_employee(
     employee: EmployeeCreate,
     service: Annotated[EmployeeService, Depends(get_employee_service)],
 ):
+    logger.info("Received create employee request for %s", employee.email)
     try:
         return service.create_employee(employee)
     except EmployeeAlreadyExistsError:
+        logger.warning("Employee already exists for %s", employee.email)
         return JSONResponse(
             status_code=400,
             content={"error": "Invalid request body"},
