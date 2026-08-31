@@ -4,3 +4,5 @@ mysql-connector-python
 pytest
 opentelemetry-distro
 opentelemetry-exporter-otlp
+opentelemetry-instrumentation-fastapi
+opentelemetry-instrumentation-mysql
