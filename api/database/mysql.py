@@ -1,9 +1,6 @@
 import os
 
 import mysql.connector
-# from opentelemetry.instrumentation.mysql import MySQLInstrumentor
-
-# MySQLInstrumentor().instrument()
 
 
 def get_mysql_connection():
